@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import FirebaseContext from "../context/firebase";
+import FirebaseContext from "../../context/firebase";
 
 export default function Login() {
   const navigate = useNavigate();

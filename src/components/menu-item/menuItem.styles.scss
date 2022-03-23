@@ -1,21 +1,16 @@
-.homepage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 80px;
-}
-
-.posts {
+.menuItem {
   min-width: 30%;
+  max-width: 50%;
   height: 300px;
   flex: 1 1 auto;
   display: flex;
   align-items: baseline;
   justify-content: center;
   border: 1px solid black;
-  margin: 0 7.5px 15px;
+  margin: 5px 7.5px 15px;
 
   &:first-child {
-    margin-right: 7.5px;
+    margin-right: 70px;
+    margin-left: 7.5px;
   }
 }

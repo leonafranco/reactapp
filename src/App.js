@@ -1,18 +1,18 @@
-// import { lazy, Suspense } from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import * as ROUTES from "./constants/routes";
-// import Homepage from "./components/homepage.component";
-import HomePage from "./components/homepage.component";
-import "./homepage.styles.scss";
+import "./pages/homepage/homepage.styles.scss";
+import Home from "./routes/home/home.component";
+import Nav from "./routes/nav/nav.component";
+import SignUp from "./routes/signUp/signUp.component";
+import { Routes, Route } from "react-router-dom";
 
-//const Login = lazy(() => import("./pages/login"));
-
-function App() {
+const App = () => {
   return (
-    <div>
-      <HomePage></HomePage>
-    </div>
+    <Routes>
+      <Route path="/home" element={<Nav />}>
+        <Route path="/home" element={<Home />} />
+      </Route>
+      <Route path="/" element={<SignUp />} />
+    </Routes>
   );
-}
+};
 
 export default App;
