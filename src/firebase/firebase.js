@@ -6,8 +6,19 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
+  addDoc,
+} from "firebase/firestore";
 
 const config = {
   apiKey: "AIzaSyAJeeAIW6Sute5V7gmK1zF_VvDi5Qh3WVY",
@@ -31,6 +42,31 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, provider);
+
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd,
+  titleKey
+) => {
+  const collectionRef = collection(db, collectionKey);
+  // const batch = writeBatch(db);
+  // const docRef = doc(collectionRef, titleKey);
+  // batch.set(docRef, objectsToAdd);
+  // await batch.commit();
+  addDoc(collectionRef, objectsToAdd);
+};
+
+export const getPostsAndDocuments = async () => {
+  const collectionRef = collection(db, "POST");
+  const q = query(collectionRef);
+  const querySnapshot = await getDocs(q);
+  const postMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { currentTime, displayName, text, uuid } = docSnapshot.data();
+    acc[currentTime] = docSnapshot.data();
+    return acc;
+  }, {});
+  return postMap;
+};
 
 export const createUserDocumentFromAuth = async (
   userAuth,
@@ -71,5 +107,8 @@ export const signInUserWithEmailAndPassword = async (email, password) => {
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
+
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);
 
 export { firebase };

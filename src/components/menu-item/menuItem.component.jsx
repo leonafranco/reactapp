@@ -1,15 +1,19 @@
 import React from "react";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
 
 import "./menuItem.styles.scss";
 
-const MenuItem = ({ title, text }) => {
+const MenuItem = ({ displayName, text }) => {
   return (
-    <div className="menuItem">
-      <div className="content">
-        <h1 className="title">{title}</h1>
-        <span className="subtitle">{text}</span>
-      </div>
-    </div>
+    <Card>
+      <Card.Body>
+        <Card.Title>{displayName}</Card.Title>
+        <Card.Text>{text}</Card.Text>
+        <Button>Likes</Button>
+        <Button>Comments</Button>
+      </Card.Body>
+    </Card>
   );
 };
 
