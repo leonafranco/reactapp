@@ -3,15 +3,21 @@ import { Outlet, Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Navigation from "react-bootstrap/Nav";
+
+import { UserContext } from "../../context/user.context";
+import { useContext } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./navigation.styles.scss";
-
+//need to fix this, react doenst like
 const Nav = () => {
-  return (
+  const { currentUser } = useContext(UserContext);
+  return currentUser ? (
     <Fragment>
-      <Navbar>
+      <Navbar id="Navbar">
         <Container>
           <Navbar.Brand>
             <Link className="nav-link" to="/home">
@@ -20,24 +26,26 @@ const Nav = () => {
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              <Button>Create Post</Button>
-              <Button>Vai ter uma bell</Button>
-              <Button>Foto</Button>
-            </Navbar.Text>
+            <Navigation>
+              <Link to="/new">
+                <Button id="Button-Nav">Create Post</Button>
+              </Link>
+              <Button id="Button-Nav">bell</Button>
+              <NavDropdown title={currentUser.displayName}>
+                <NavDropdown.Item>Veja seu perfil</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item>Criar um post</NavDropdown.Item>
+                <NavDropdown.Item>Sair</NavDropdown.Item>
+              </NavDropdown>
+            </Navigation>
           </Navbar.Collapse>
         </Container>
       </Navbar>
       <Outlet />
     </Fragment>
+  ) : (
+    ""
   );
 };
-
-/*       <div className="nav">
-        <div>sadasda</div>
-        <div class="nav-link-container">
-
-        </div>
-      </div> */
 
 export default Nav;

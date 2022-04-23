@@ -11,8 +11,8 @@ const Directory = () => {
         <Fragment key={key}>
           <div className="directory-pub">
             <MenuItem
-              key={postsMap[key].displayName}
-              title={postsMap[key].text}
+              displayName={postsMap[key].displayName}
+              currentTime={postsMap[key].currentTime}
               text={postsMap[key].text}
             />
           </div>

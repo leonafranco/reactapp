@@ -1,0 +1,14 @@
+#Button-card {
+  background-color: white;
+  border: none;
+  color: grey;
+  margin-right: 20px;
+
+  &:hover {
+    background-color: rgb(216, 216, 216);
+  }
+}
+
+#Menu-item-card {
+  margin-bottom: 20px;
+}

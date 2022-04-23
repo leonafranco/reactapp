@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
+import HomePageLeftMenu from "../../components/home-page-left-menu/home-page-left-menu.component";
 import "./home.styles.scss";
 
 const Home = () => {
@@ -14,18 +14,7 @@ const Home = () => {
     <Container>
       <Row>
         <Col>
-          <Row>
-            <Button>Home</Button>
-          </Row>
-          <Row>
-            <Button>Amigos</Button>
-          </Row>
-          <Row>
-            <Button>Ofertas</Button>
-          </Row>
-          <Row>
-            <Button>Contact</Button>
-          </Row>
+          <HomePageLeftMenu />
         </Col>
         <Col xs={7}>
           <Directory publication={posts} />

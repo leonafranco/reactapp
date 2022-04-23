@@ -18,6 +18,7 @@ import {
   query,
   getDocs,
   addDoc,
+  orderBy,
 } from "firebase/firestore";
 
 const config = {
@@ -58,10 +59,10 @@ export const addCollectionAndDocuments = async (
 
 export const getPostsAndDocuments = async () => {
   const collectionRef = collection(db, "POST");
-  const q = query(collectionRef);
+  const q = query(collectionRef, orderBy("currentTime", "desc"));
   const querySnapshot = await getDocs(q);
   const postMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { currentTime, displayName, text, uuid } = docSnapshot.data();
+    const { currentTime } = docSnapshot.data();
     acc[currentTime] = docSnapshot.data();
     return acc;
   }, {});

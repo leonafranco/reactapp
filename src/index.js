@@ -6,17 +6,19 @@ import FirebaseContext from "./context/firebase";
 import { firebase } from "./firebase/firebase";
 import { UserProvider } from "./context/user.context";
 import { PostProvider } from "./context/posts.context";
+import Footer from "./routes/footer/footer.component";
 
 ReactDOM.render(
   <React.StrictMode>
     <FirebaseContext.Provider value={{ firebase }}>
-      <BrowserRouter>
-        <UserProvider>
+      <UserProvider>
+        <BrowserRouter>
           <PostProvider>
             <App />
           </PostProvider>
-        </UserProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </UserProvider>
+      <Footer />
     </FirebaseContext.Provider>
   </React.StrictMode>,
 
