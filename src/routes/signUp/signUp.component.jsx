@@ -1,20 +1,23 @@
 import "./signUp.styles.scss";
 import SignUpForm from "../../components/signUp-forms/signUp-form.component";
 import SignInForm from "../../components/signIn-forms/signIn-form.component";
-import logo from "../../imgs/tumblr.png";
+import logo from "../../imgs/test.jpeg";
 import ButtonSignInPage from "../../components/button-signUp-page/button-signUp-page.component";
 import { useState } from "react";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 const SignUp = () => {
   const [buttonSignInForm, setButtonSignInForm] = useState(false);
 
   return (
-    <div className="mainDiv">
-      <div className="div1">
-        <img src={logo} alt=" logo" />
-      </div>
-      <div className="div2">
-        <div className="div2Son">
+    <Container>
+      <Row id="row-main-page">
+        <Col id="logo-div">
+          <img src={logo} alt=" logo" />
+        </Col>
+        <Col>
           <h1>De ESTGOH para a ESTGOH</h1>
           <SignUpForm />
           <br />
@@ -25,13 +28,13 @@ const SignUp = () => {
           >
             Entrar
           </ButtonSignInPage>
-        </div>
-        <SignInForm
-          trigger={buttonSignInForm}
-          setTrigger={setButtonSignInForm}
-        />
-      </div>
-    </div>
+          <SignInForm
+            trigger={buttonSignInForm}
+            setTrigger={setButtonSignInForm}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

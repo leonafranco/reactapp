@@ -12,6 +12,7 @@ const defaultFormFields = {
   displayName: "",
   uuid: "",
   currentTime: "",
+  likes: 0,
 };
 
 const PostForm = () => {
@@ -34,8 +35,9 @@ const PostForm = () => {
     event.preventDefault();
     try {
       formFields.displayName = currentUser.displayName;
-      formFields.currentTime = Date().toLocaleString();
+      formFields.currentTime = Date.now();
       formFields.uuid = currentUser.reloadUserInfo.localId;
+      formFields.likes = 0;
       console.log(formFields);
       await addCollectionAndDocuments("POST", formFields);
       resetFormFields();
@@ -45,14 +47,14 @@ const PostForm = () => {
   return (
     <Container>
       <Row>
-        <Col xs={2}>dasdas</Col>
+        <Col xs={2}></Col>
         <Col xs={5}>
           <Form onSubmit={handleSubmit}>
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
-              <Form.Label>Example textarea</Form.Label>
+              <Form.Label>Make a New Post</Form.Label>
               <Form.Control
                 required
                 onChange={handleChange}

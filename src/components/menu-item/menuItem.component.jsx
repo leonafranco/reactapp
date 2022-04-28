@@ -1,19 +1,56 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
+import {
+  updateLikes,
+  checkIfUsersAlreadyLikedIt,
+} from "../../firebase/firebase";
+
 import "./menuItem.styles.scss";
 
-const MenuItem = ({ displayName, text, currentTime }) => {
+import { UserContext } from "../../context/user.context";
+
+const MenuItem = ({
+  displayName,
+  text,
+  currentTime,
+  docId,
+  likes,
+  comments,
+}) => {
+  const { currentUser } = useContext(UserContext);
+
+  const handleLikeButton = async () => {
+    let isAlreadyLikedIt = await checkIfUsersAlreadyLikedIt(currentUser.uid);
+    await updateLikes(docId, isAlreadyLikedIt, currentUser.uid);
+    isAlreadyLikedIt
+      ? setLikesValue(likesValue - 1)
+      : setLikesValue(likesValue + 1);
+  };
+
+  const handleCommentButton = async () => {
+    console.log("i comment it");
+    setCommentsValue(commentsValue + 1);
+  };
+
+  const [likesValue, setLikesValue] = useState(likes);
+  const [commentsValue, setCommentsValue] = useState(comments);
+
+  let d = new Date(currentTime);
   return (
     <Card id="Menu-item-card">
       <Card.Body>
         <Card.Title>
-          {displayName} <h6>{currentTime.split(" ").slice(0, 3)}</h6>
+          {displayName} <h6>{d.toString()}</h6>
         </Card.Title>
         <Card.Text>{text}</Card.Text>
-        <Button id="Button-card">41 Likes</Button>
-        <Button id="Button-card">52 Comments</Button>
+        <Button onClick={handleLikeButton} id="Button-card">
+          {likesValue} Likes
+        </Button>
+        <Button onClick={handleCommentButton} id="Button-card">
+          {commentsValue} Comments
+        </Button>
       </Card.Body>
     </Card>
   );

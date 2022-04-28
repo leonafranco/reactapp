@@ -2,6 +2,10 @@ import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
+import { ReactComponent as HomeIcon } from "../../assets/home.svg";
+import { ReactComponent as FriendsIcon } from "../../assets/friends.svg";
+import { ReactComponent as ContactIcon } from "../../assets/contact.svg";
+import { ReactComponent as JobsIcon } from "../../assets/jobs.svg";
 
 import "./home-page-left-menu.component.styles.scss";
 
@@ -10,18 +14,30 @@ const HomePageLeftMenu = () => {
     <Container>
       <Link to="/home">
         <Row>
-          <Button id="Button">Home</Button>
+          <Button id="Button">
+            <HomeIcon className="svg-icon" />
+            Home
+          </Button>
         </Row>
       </Link>
       <Row>
-        <Button id="Button">Amigos</Button>
+        <Button id="Button">
+          <FriendsIcon className="svg-icon" />
+          Amigos
+        </Button>
       </Row>
       <Row>
-        <Button id="Button">Ofertas</Button>
+        <Button id="Button">
+          <JobsIcon className="svg-icon" />
+          Ofertas
+        </Button>
       </Row>
       <Link to="/contact">
         <Row>
-          <Button id="Button">Contacto</Button>
+          <Button id="Button">
+            <ContactIcon className="svg-icon" />
+            Contacto
+          </Button>
         </Row>
       </Link>
     </Container>

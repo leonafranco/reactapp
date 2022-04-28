@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -19,6 +20,12 @@ import {
   getDocs,
   addDoc,
   orderBy,
+  limit,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  increment,
+  where,
 } from "firebase/firestore";
 
 const config = {
@@ -50,11 +57,42 @@ export const addCollectionAndDocuments = async (
   titleKey
 ) => {
   const collectionRef = collection(db, collectionKey);
-  // const batch = writeBatch(db);
-  // const docRef = doc(collectionRef, titleKey);
-  // batch.set(docRef, objectsToAdd);
-  // await batch.commit();
-  addDoc(collectionRef, objectsToAdd);
+  if (titleKey === undefined) {
+    addDoc(collectionRef, objectsToAdd);
+  } else {
+    const batch = writeBatch(db);
+    const docRef = doc(collectionRef, titleKey);
+    batch.set(docRef, objectsToAdd);
+    await batch.commit();
+  }
+};
+
+export const updateLikes = async (docID, isAlreadyLiked, userID) => {
+  const followerRef = doc(db, "POST", docID);
+  console.log(isAlreadyLiked);
+  await updateDoc(followerRef, {
+    likes: isAlreadyLiked ? increment(-1) : increment(+1),
+    usersWhoLikedIt: isAlreadyLiked ? arrayRemove(userID) : arrayUnion(userID),
+  });
+};
+
+export const updateFollowers = async (
+  followerUserId,
+  loggedIn,
+  isFollowingThisPerson
+) => {
+  const followerRef = doc(db, "users", followerUserId);
+  await updateDoc(followerRef, {
+    followers: isFollowingThisPerson
+      ? arrayRemove(loggedIn)
+      : arrayUnion(loggedIn),
+  });
+  const followingRef = doc(db, "users", loggedIn);
+  await updateDoc(followingRef, {
+    following: isFollowingThisPerson
+      ? arrayRemove(followerUserId)
+      : arrayUnion(followerUserId),
+  });
 };
 
 export const getPostsAndDocuments = async () => {
@@ -62,11 +100,34 @@ export const getPostsAndDocuments = async () => {
   const q = query(collectionRef, orderBy("currentTime", "desc"));
   const querySnapshot = await getDocs(q);
   const postMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { currentTime } = docSnapshot.data();
-    acc[currentTime] = docSnapshot.data();
+    acc[docSnapshot.id] = docSnapshot.data();
     return acc;
   }, {});
   return postMap;
+};
+
+export const checkIfUsersAlreadyLikedIt = async (userID) => {
+  const collectionRef = collection(db, "POST");
+  const q = query(
+    collectionRef,
+    where("usersWhoLikedIt", "array-contains", userID)
+  );
+  const querySnapshot = await getDocs(q);
+  console.log(querySnapshot.docs.length);
+  const result = querySnapshot.docs.length === 0 ? false : true;
+  console.log(result);
+  return result;
+};
+
+export const getSuggestedFriends = async () => {
+  const collectionRef = collection(db, "users");
+  const q = query(collectionRef, limit(3));
+  const querySnapshot = await getDocs(q);
+  const suggestedFriends = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    acc[docSnapshot.id] = docSnapshot.data();
+    return acc;
+  }, {});
+  return suggestedFriends;
 };
 
 export const createUserDocumentFromAuth = async (
@@ -111,5 +172,7 @@ export const signInUserWithEmailAndPassword = async (email, password) => {
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const signOutUser = async () => await signOut(auth);
 
 export { firebase };

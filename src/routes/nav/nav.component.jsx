@@ -5,6 +5,8 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Navigation from "react-bootstrap/Nav";
+import { signOutUser } from "../../firebase/firebase";
+import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 
 import { UserContext } from "../../context/user.context";
 import { useContext } from "react";
@@ -15,6 +17,12 @@ import "./navigation.styles.scss";
 //need to fix this, react doenst like
 const Nav = () => {
   const { currentUser } = useContext(UserContext);
+
+  const signOutHandler = async () => {
+    const res = await signOutUser();
+    console.log(res);
+  };
+
   return currentUser ? (
     <Fragment>
       <Navbar id="Navbar">
@@ -30,12 +38,17 @@ const Nav = () => {
               <Link to="/new">
                 <Button id="Button-Nav">Create Post</Button>
               </Link>
-              <Button id="Button-Nav">bell</Button>
+              <Button id="Bell-button">
+                <BellIcon className="svg-icon" />
+              </Button>
               <NavDropdown title={currentUser.displayName}>
-                <NavDropdown.Item>Veja seu perfil</NavDropdown.Item>
+                <NavDropdown.Item href="/perfil">
+                  Veja seu perfil
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item>Criar um post</NavDropdown.Item>
-                <NavDropdown.Item>Sair</NavDropdown.Item>
+                <NavDropdown.Item onClick={signOutHandler}>
+                  Sair
+                </NavDropdown.Item>
               </NavDropdown>
             </Navigation>
           </Navbar.Collapse>
@@ -49,3 +62,5 @@ const Nav = () => {
 };
 
 export default Nav;
+
+<i class="fi-home"></i>;

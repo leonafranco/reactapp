@@ -6,6 +6,7 @@ import FirebaseContext from "./context/firebase";
 import { firebase } from "./firebase/firebase";
 import { UserProvider } from "./context/user.context";
 import { PostProvider } from "./context/posts.context";
+import { SuggestedFriendsProvider } from "./context/suggestedFriends.context";
 import Footer from "./routes/footer/footer.component";
 
 ReactDOM.render(
@@ -13,9 +14,11 @@ ReactDOM.render(
     <FirebaseContext.Provider value={{ firebase }}>
       <UserProvider>
         <BrowserRouter>
-          <PostProvider>
-            <App />
-          </PostProvider>
+          <SuggestedFriendsProvider>
+            <PostProvider>
+              <App />
+            </PostProvider>
+          </SuggestedFriendsProvider>
         </BrowserRouter>
       </UserProvider>
       <Footer />

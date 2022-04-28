@@ -1,4 +1,5 @@
 import "./button-signUp-page.styles.scss";
+import Button from "react-bootstrap/Button";
 
 const BUTTON_TYPE_OBJECT = {
   google: "google-sign-in",
@@ -7,12 +8,12 @@ const BUTTON_TYPE_OBJECT = {
 
 const ButtonSignInPage = ({ children, buttonType, ...otherProps }) => {
   return (
-    <button
+    <Button
       className={`button-container ${BUTTON_TYPE_OBJECT[buttonType]}`}
       {...otherProps}
     >
       {children}
-    </button>
+    </Button>
   );
 };
 

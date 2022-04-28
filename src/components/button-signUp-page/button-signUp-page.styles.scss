@@ -7,11 +7,6 @@
   cursor: pointer;
   border: none;
 
-  &:hover {
-    background-color: rgb(216, 216, 216);
-    border: 1px solid grey;
-  }
-
   &.google-sign-in {
     background-color: rgb(58, 58, 245);
     color: white;

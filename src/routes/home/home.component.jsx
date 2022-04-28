@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "bootstrap/dist/css/bootstrap.min.css";
 import HomePageLeftMenu from "../../components/home-page-left-menu/home-page-left-menu.component";
+import SuggestedFriends from "../../components/suggested-friends/suggsted-friends.component";
 import "./home.styles.scss";
 
 const Home = () => {
@@ -19,7 +20,9 @@ const Home = () => {
         <Col xs={7}>
           <Directory publication={posts} />
         </Col>
-        <Col>2 of 2</Col>
+        <Col>
+          <SuggestedFriends />
+        </Col>
       </Row>
     </Container>
   );

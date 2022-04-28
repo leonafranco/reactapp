@@ -14,6 +14,8 @@ const Directory = () => {
               displayName={postsMap[key].displayName}
               currentTime={postsMap[key].currentTime}
               text={postsMap[key].text}
+              docId={key}
+              likes={postsMap[key].likes}
             />
           </div>
         </Fragment>
