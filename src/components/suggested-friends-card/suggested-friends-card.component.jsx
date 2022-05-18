@@ -10,6 +10,7 @@ const SuggestedFriendsCard = ({
   currentUserId,
 }) => {
   const handleFollowUser = async () => {
+    console.log(suggestedFriendUserId);
     await updateFollowers(suggestedFriendUserId, currentUserId, false);
   };
 
@@ -18,7 +19,9 @@ const SuggestedFriendsCard = ({
       <Card.Body>
         <Card.Title>{displayName}</Card.Title>
         <Card.Text>{email}</Card.Text>
-        <Button onClick={handleFollowUser}>Follow Me!</Button>
+        <Button id="btn-followMe" onClick={handleFollowUser}>
+          Follow Me!
+        </Button>
       </Card.Body>
     </Card>
   );

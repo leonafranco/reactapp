@@ -5,6 +5,7 @@ import SignUp from "./routes/signUp/signUp.component";
 import CreatePost from "./routes/createPost/createPost.component";
 import Contact from "./routes/contact/contact.component";
 import Perfil from "./routes/perfil/perfil.component";
+import Comment from "./routes/comment/comment.component";
 import { Routes, Route } from "react-router-dom";
 
 const App = () => {
@@ -22,6 +23,9 @@ const App = () => {
       </Route>
       <Route element={<Nav />}>
         <Route path="/perfil" element={<Perfil />} />
+      </Route>
+      <Route element={<Nav />}>
+        <Route path="home/:docId" element={<Comment />} />
       </Route>
     </Routes>
   );

@@ -4,15 +4,18 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useContext, useState } from "react";
-import { addCollectionAndDocuments } from "../../firebase/firebase";
+import {
+  addCollectionAndDocuments,
+  getDocActualUser,
+} from "../../firebase/firebase";
 import { UserContext } from "../../context/user.context";
 
 const defaultFormFields = {
   text: "",
-  displayName: "",
   uuid: "",
   currentTime: "",
   likes: 0,
+  usersWhoLikedIt: [],
 };
 
 const PostForm = () => {
@@ -34,9 +37,10 @@ const PostForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      formFields.displayName = currentUser.displayName;
+      const actualUser = await getDocActualUser(currentUser.uid);
+      console.log(actualUser);
       formFields.currentTime = Date.now();
-      formFields.uuid = currentUser.reloadUserInfo.localId;
+      formFields.uuid = currentUser.uid;
       formFields.likes = 0;
       console.log(formFields);
       await addCollectionAndDocuments("POST", formFields);

@@ -4,41 +4,68 @@ import Col from "react-bootstrap/Col";
 import HomePageLeftMenu from "../../components/home-page-left-menu/home-page-left-menu.component";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
-import { useContext, useState } from "react";
-import { addCollectionAndDocuments } from "../../firebase/firebase";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/user.context";
 import Button from "react-bootstrap/Button";
+import {
+  getDocActualUser,
+  uploadPhoto,
+  updateDocUsers,
+} from "../../firebase/firebase";
 
 const Perfil = () => {
   const { currentUser } = useContext(UserContext);
 
+  const [username, setUsername] = useState();
+  const [isLoading, setLoading] = useState(false);
+
   const defaultFormFields = {
-    displayName: currentUser.displayName,
+    displayName: "",
     email: currentUser.email,
     curso: "",
+    profissao: "",
+    profilePic: "",
   };
+
+  const actualUser = async () => {
+    await getDocActualUser(currentUser.uid).then((resp) => {
+      setUsername(resp);
+      setLoading(true);
+    });
+  };
+
+  useEffect(() => {
+    actualUser();
+  }, []);
 
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, curso } = formFields;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (formFields.displayName.length === 0) {
+      formFields.displayName = username.displayName;
+    }
+    formFields.profissao = document.getElementById("profissaoFormID").value;
+    console.log(formFields.profilePic);
     try {
-      await addCollectionAndDocuments(
-        "personalInformation",
-        formFields,
-        currentUser.uid
-      );
+      if (formFields.profilePic)
+        await uploadPhoto(formFields.profilePic, currentUser.uid);
+
+      await updateDocUsers(formFields, currentUser.uid);
     } catch (error) {}
+  };
+
+  const handlePicChange = (event) => {
+    formFields.profilePic = event.target.files[0];
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormFields({ ...formFields, [name]: value });
   };
 
-  return (
+  return isLoading ? (
     <Container id="Container">
       <Row>
         <Col xs={3}>
@@ -55,21 +82,32 @@ const Perfil = () => {
                     onChange={handleChange}
                     name="displayName"
                     value={displayName}
+                    placeholder={username.displayName}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder={currentUser.email}
+                    placeholder={currentUser.email} //need to be fixed
                     onChange={handleChange}
                     name="email"
                     value={email}
                   />
                 </Form.Group>
-                <Form.Group className="mb-3">
+                <Form.Group controlId="formFile" className="mb-3">
                   <Form.Label>Profile image</Form.Label>
-                  <Form.Control type="file" />
+                  <Col>
+                    <img
+                      width="50px"
+                      height="50px"
+                      src={username.profilePic}
+                      alt="user profile"
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Control onChange={handlePicChange} type="file" />
+                  </Col>
                 </Form.Group>
               </Card.Body>
 
@@ -84,12 +122,12 @@ const Perfil = () => {
                     value={curso}
                   />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="profissaoFormID">
                   <Form.Select aria-label="Profissão">
                     <option>Profissão</option>
-                    <option value="1">Estudante</option>
-                    <option value="2">Formado</option>
-                    <option value="3">Professor</option>
+                    <option value="Estudante">Estudante</option>
+                    <option value="Formado">Formado</option>
+                    <option value="Professor">Professor</option>
                   </Form.Select>
                 </Form.Group>
                 <div className="d-grid gap-2">
@@ -103,6 +141,8 @@ const Perfil = () => {
         </Col>
       </Row>
     </Container>
+  ) : (
+    ""
   );
 };
 

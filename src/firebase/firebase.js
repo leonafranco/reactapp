@@ -25,8 +25,9 @@ import {
   arrayUnion,
   arrayRemove,
   increment,
-  where,
 } from "firebase/firestore";
+
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 const config = {
   apiKey: "AIzaSyAJeeAIW6Sute5V7gmK1zF_VvDi5Qh3WVY",
@@ -50,6 +51,7 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, provider);
+const storage = getStorage();
 
 export const addCollectionAndDocuments = async (
   collectionKey,
@@ -67,13 +69,12 @@ export const addCollectionAndDocuments = async (
   }
 };
 
-export const updateLikes = async (docID, isAlreadyLiked, userID) => {
-  const followerRef = doc(db, "POST", docID);
-  console.log(isAlreadyLiked);
-  await updateDoc(followerRef, {
-    likes: isAlreadyLiked ? increment(-1) : increment(+1),
-    usersWhoLikedIt: isAlreadyLiked ? arrayRemove(userID) : arrayUnion(userID),
-  });
+export const updateDocUsers = async (formFields, userID) => {
+  const followerRef = doc(db, "users", userID);
+  formFields.profilePic = await getDownloadURL(ref(storage, userID));
+  console.log(formFields.profilePic);
+  console.log(formFields);
+  await updateDoc(followerRef, formFields);
 };
 
 export const updateFollowers = async (
@@ -95,6 +96,12 @@ export const updateFollowers = async (
   });
 };
 
+export const getDocActualUser = async (userID) => {
+  const docRef = doc(db, "users", userID);
+  const docSnapshot = await getDoc(docRef);
+  return docSnapshot.data();
+};
+
 export const getPostsAndDocuments = async () => {
   const collectionRef = collection(db, "POST");
   const q = query(collectionRef, orderBy("currentTime", "desc"));
@@ -106,17 +113,32 @@ export const getPostsAndDocuments = async () => {
   return postMap;
 };
 
-export const checkIfUsersAlreadyLikedIt = async (userID) => {
-  const collectionRef = collection(db, "POST");
-  const q = query(
-    collectionRef,
-    where("usersWhoLikedIt", "array-contains", userID)
-  );
-  const querySnapshot = await getDocs(q);
-  console.log(querySnapshot.docs.length);
-  const result = querySnapshot.docs.length === 0 ? false : true;
-  console.log(result);
+export const checkIfUsersAlreadyLikedIt = async (userID, docID) => {
+  const docRef = doc(db, "POST", docID);
+  const docSnapshot = await getDoc(docRef);
+  const result = docSnapshot.data().usersWhoLikedIt.includes(userID);
   return result;
+};
+
+export const updateLikes = async (docID, isAlreadyLiked, userID) => {
+  const followerRef = doc(db, "POST", docID);
+  if (isAlreadyLiked) {
+    await updateDoc(followerRef, {
+      likes: increment(-1),
+      usersWhoLikedIt: arrayRemove(userID),
+    });
+  } else {
+    await updateDoc(followerRef, {
+      likes: increment(+1),
+      usersWhoLikedIt: arrayUnion(userID),
+    });
+  }
+};
+
+export const uploadPhoto = async (file, currentUserUID) => {
+  const fileRef = ref(storage, currentUserUID);
+  const snapshot = await uploadBytes(fileRef, file);
+  return snapshot;
 };
 
 export const getSuggestedFriends = async () => {
@@ -143,12 +165,19 @@ export const createUserDocumentFromAuth = async (
   if (!userSnapshot.exists()) {
     const { displayName, email } = userAuth;
     const createdAt = new Date();
-
+    const profilePicRef = ref(storage, "default-profile.jpeg");
+    const profilePic = await getDownloadURL(profilePicRef);
+    const followers = [];
+    const following = [];
+    console.log(profilePic);
     try {
       await setDoc(userDocRef, {
         displayName,
         email,
         createdAt,
+        profilePic,
+        followers,
+        following,
         ...additionalInformation,
       });
     } catch (error) {

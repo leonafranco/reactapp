@@ -1,10 +1,7 @@
-import React, { Fragment, useContext } from "react";
-import MenuItem from "../menu-item/menuItem.component";
+import Container from "react-bootstrap/Container";
+import Card from "react-bootstrap/Card";
 
-import { PostContext } from "../../context/posts.context";
-
-const Directory = () => {
-  const { postsMap } = useContext(PostContext);
+export const CommentPostCard = (postID, uuid) => {
   return (
     <Fragment>
       {Object.keys(postsMap).map((key) => (
@@ -23,5 +20,3 @@ const Directory = () => {
     </Fragment>
   );
 };
-
-export default Directory;
