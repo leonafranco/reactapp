@@ -1,7 +1,11 @@
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
+import { Fragment, useContext } from "react";
+import MenuItem from "../menu-item/menuItem.component";
+import { PostContext } from "../../context/posts.context";
 
 export const CommentPostCard = (postID, uuid) => {
+
+  const { postsMap } = useContext(PostContext);
+
   return (
     <Fragment>
       {Object.keys(postsMap).map((key) => (

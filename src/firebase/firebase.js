@@ -25,6 +25,7 @@ import {
   arrayUnion,
   arrayRemove,
   increment,
+  where
 } from "firebase/firestore";
 
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
@@ -111,6 +112,17 @@ export const getPostsAndDocuments = async () => {
     return acc;
   }, {});
   return postMap;
+};
+
+export const getComment = async (postID) => {
+  const collectionRef = collection(db, "comments");
+  const q = query(collectionRef, where("postid", "==", postID), orderBy("currentTime", "desc"));
+  const querySnapshot = await getDocs(q);
+  const commentMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    acc[docSnapshot.id] = docSnapshot.data();
+    return acc;
+  }, {});
+  return commentMap;
 };
 
 export const checkIfUsersAlreadyLikedIt = async (userID, docID) => {

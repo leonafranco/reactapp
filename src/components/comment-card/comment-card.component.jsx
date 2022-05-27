@@ -7,6 +7,8 @@ import { PostContext } from "../../context/posts.context";
 import { useLocation, useParams } from "react-router";
 import { useState } from "react";
 import { addCollectionAndDocuments } from "../../firebase/firebase";
+import { CommentPostCard } from "../comment-post/comment-post.component";
+
 
 const defaultFormFields = {
   comment: "",
@@ -22,7 +24,7 @@ const CommentCard = () => {
   const location = useLocation();
   const username = location.state;
   const { docId } = useParams();
-  console.log(postsMap[docId]);
+  console.log(username)
 
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { comment } = formFields;
@@ -98,7 +100,7 @@ const CommentCard = () => {
           </Form>
         </Card.Body>
         <Card.Body>
-          <Card.Text>This should be comments</Card.Text>
+        <CommentPostCard/>
         </Card.Body>
       </Card>
     </Container>
