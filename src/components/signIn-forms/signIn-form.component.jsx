@@ -31,6 +31,7 @@ const SignInForm = (props) => {
     try {
       await signInUserWithEmailAndPassword(email, password);
       resetFormFields();
+      
     } catch (error) {
       if (error.code === "auth/wrong-password")
         alert("Password ou Email incorretos");
